@@ -94,6 +94,11 @@ select {
 .float-right {
   float: right !important;
 }
+.clearfix::after {
+  display: block;
+  clear: both;
+  content: "";
+}
 /* END BOOTSTRAP */
 
 body {
