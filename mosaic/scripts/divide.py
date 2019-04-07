@@ -30,7 +30,7 @@ def main():
             left = (c / args.cols) * width
             right = ((c + 1) / args.cols) * width
             sub_im = im.crop((left, upper, right, lower))
-            sub_im.save('{}_{}_{}.{}'.format(filename, r, c, extension))
+            sub_im.save('{}_{}_{}{}'.format(filename, r, c, extension))
 
 if __name__ == '__main__':
     main()
