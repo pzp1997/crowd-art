@@ -23,7 +23,7 @@ Overall amount of work: 8 points
 
 ### From clicks comes form
 
-The output of the Clicks subproject will be a heatmap of sorts showing where people click on an image. We will provide Turkers with a source image, say of a horse galloping in a field, and tell all of them to click on anywhere they want within a specific part of the image, say the horse. Our hypothesis is that some Turkers will click on the head of the horse, while others might click on the horses main, while others might click on the tail, while still others might click on other parts of the horse. The result will be a bunch of dots that approximate the shape of a horse.
+The output of the Clicks subproject will be a heatmap of sorts showing where people click on an image. We will provide Turkers with a source image, say of a horse galloping in a field, and tell all of them to click on anywhere they want within a specific part of the image, say the horse. Our hypothesis is that some Turkers will click on the head of the horse, while others might click on the horse's mane, while others might click on the tail, while still others might click on other parts of the horse. The result will be a bunch of dots that approximate the shape of a horse.
 Overall difficulty ranking: 3 points
 -Webapp specific to this task: 2
 -HIT design and management: 1
