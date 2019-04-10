@@ -36,7 +36,7 @@ Due to the inherent subjectivity of art, we plan on imposing weak quality contro
 
 We plan on running each of these experiments multiple times. As a second layer of crowd-sourcing, we will ask the Turkers to rank which piece of artwork they like best within each experiment and then overall. We are considering paying a bonus to every Turker who contributed to the winning artwork (pending financial feasibility). The total expected amount of work is 19 points.  
 
-##Data
+## Data
 
 Our input data mainly consists of a single image of a horse.  This can be found in the "assets" folder of our project (‘paint-horse-running-in-field').  
 
