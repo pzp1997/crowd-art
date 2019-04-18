@@ -11,7 +11,8 @@ function getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
   return {
     x: evt.clientX - rect.left,
-    y: evt.clientY - rect.top
+    y: evt.clientY - rect.top,
+    timestamp: Date.now(),
   };
 }
 
@@ -19,9 +20,11 @@ function getMousePos(canvas, evt) {
 function redraw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   for (var i = 0; i < strokes.length; i++) {
-    var s = strokes[i];
-    for (var j = 1; j < s.length; j++) {
-      drawLine(s[j - 1], s[j]);
+    if (strokes[i].undoTimestamp === null) {
+      var s = strokes[i].data;
+      for (var j = 1; j < s.length; j++) {
+        drawLine(s[j - 1], s[j]);
+      }
     }
   }
 }
@@ -41,7 +44,10 @@ canvas.addEventListener("mousedown", function(evt) {
   isPenDown = true;
   var mousePos = getMousePos(canvas, evt);
   stroke = [mousePos];
-  strokes.push(stroke);
+  strokes.push({
+    data: stroke,
+    undoTimestamp: null,
+  });
   redraw();
 });
 
@@ -66,10 +72,14 @@ canvas.addEventListener("mouseleave", endStroke);
 /* UNDO BUTTON */
 var undoButton = document.getElementById("undo");
 undoButton.addEventListener("click", function() {
-  if (strokes.length > 0) {
-    strokes.pop();
+  var i = strokes.length - 1;
+  for (; i >= 0; i--) {
+    if (strokes[i].undoTimestamp === null) {
+      strokes[i].undoTimestamp = Date.now();
+      break;
+    }
   }
-  if (strokes.length <= 0) {
+  if (i <= 0) {
     undoButton.setAttribute("disabled", "");
   }
   redraw();
