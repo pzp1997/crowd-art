@@ -1,0 +1,14 @@
+.pt-4 {
+  padding-top: 1.5rem !important;
+}
+body {
+  background-color: #333;
+}
+#canvas {
+  border: 1px solid black;
+  margin-top: 20px;
+  background: url(../assets/horse.jpg);
+}
+.text-center {
+  text-align: center !important;
+}
