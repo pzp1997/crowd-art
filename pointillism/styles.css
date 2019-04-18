@@ -99,6 +99,9 @@ select {
   clear: both;
   content: "";
 }
+.pt-3 {
+  padding-top: 1rem !important;
+}
 /* END BOOTSTRAP */
 
 body {
@@ -108,9 +111,8 @@ body {
   border: 1px solid black;
   margin-top: 20px;
 }
-#toolbar {
+.toolbar {
   margin: 0 auto;
-  width: 100px;
 }
 .dot {
   display: inline-block;

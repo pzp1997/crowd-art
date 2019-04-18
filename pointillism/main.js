@@ -14,7 +14,10 @@ var canvas = document.getElementById("canvas");
 canvas.width = pictureWidth * dotDiameter;
 canvas.height = pictureHeight * dotDiameter;
 
-document.getElementById("toolbar").style.width = (pictureWidth * dotDiameter) + "px";
+var toolbars = document.getElementsByClassName("toolbar");
+for (var i = 0; i < toolbars.length; i++) {
+  toolbars[i].style.width = (pictureWidth * dotDiameter) + "px";
+}
 
 var ctx = canvas.getContext("2d");
 drawDots();
