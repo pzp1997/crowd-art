@@ -1,5 +1,3 @@
-var dotDiameter = 10;
-
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
@@ -8,7 +6,7 @@ var clicks = [];
 function drawDot(x, y) {
   ctx.beginPath();
   ctx.fillStyle = "red";
-  ctx.arc(x, y, dotDiameter, 0, 2 * Math.PI);
+  ctx.arc(x, y, 10, 0, 2 * Math.PI);
   ctx.fill();
 }
 

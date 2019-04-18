@@ -1,0 +1,94 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+
+  <crowd-instructions link-text="View instructions" link-type="button">
+    <short-summary>
+      <p>
+        Every time you click on the image, a dot will appear where you clicked.
+        Please click on the horse at least 10 times. It can be anywhere on the
+        horse (so long as it is actually ON the horse!). You can only submit
+        the HIT if you click at least 10 times.
+      </p>
+    </short-summary>
+
+    <!-- <detailed-instructions>
+      <p></p>
+    </detailed-instructions> -->
+
+    <!-- <positive-example>
+      <p>Provide an example of a good answer here</p>
+      <p>Explain why it's a good answer</p>
+    </positive-example> -->
+
+    <!-- <negative-example>
+      <p>Provide an example of a bad answer here</p>
+      <p>Explain why it's a bad answer</p>
+    </negative-example> -->
+  </crowd-instructions>
+
+  <style>
+  #canvas {
+    border: 1px solid black;
+    margin-top: 20px;
+    background: url(http://palmerpaul.com/crowd-art/src/assets/horse.jpg);
+    background-size: cover;
+  }
+  .text-center {
+    text-align: center !important;
+  }
+  </style>
+
+  <div class="text-center">
+    <canvas id="canvas" width="600px" height="477px"></canvas>
+  </div>
+
+  <crowd-input id="response" name="response" type="hidden" style="display:hidden;"></crowd-input>
+  <crowd-button id="submitButton" form-action="submit" variant="primary" disabled>Submit</crowd-button>
+
+  <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    var clicks = [];
+
+    function drawDot(x, y) {
+      ctx.beginPath();
+      ctx.fillStyle = "red";
+      ctx.arc(x, y, 10, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+
+    function getMousePos(canvas, evt) {
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top,
+        timestamp: Date.now(),
+      };
+    }
+
+    canvas.addEventListener("click", function(evt) {
+      var mousePos = getMousePos(canvas, evt);
+      drawDot(mousePos.x, mousePos.y);
+      clicks.push(mousePos);
+      if (clicks.length >= 10) {
+        submitButton.removeAttribute("disabled");
+      }
+    });
+
+    /* SUBMIT RESPONSE TO MTURK */
+    var submitButton = document.getElementById("submitButton");
+    var response = document.getElementById("response");
+    submitButton.addEventListener("click", function() {
+      response.value = JSON.stringify(clicks);
+    });
+  });
+  </script>
+</crowd-form>
