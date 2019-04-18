@@ -1,18 +1,11 @@
-var dotDiameter = 10;
-
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-
+/* STATE */
 var strokes = [];
 var stroke = [];
 var isPenDown = false;
 
-// var img = new Image();
-// img.addEventListener("load", function() {
-//   ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
-// }, false);
-// img.src = "../assets/paint-horse-running-in-field.jpg";
-
+/* CANVAS SETUP */
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
 
 function getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
@@ -37,7 +30,7 @@ function drawLine(startPoint, endPoint) {
   ctx.beginPath();
   ctx.moveTo(startPoint.x, startPoint.y);
   ctx.lineTo(endPoint.x, endPoint.y);
-  ctx.strokeStyle = "black";
+  ctx.strokeStyle = "red";
   ctx.lineWidth = 2;
   ctx.stroke();
   ctx.closePath();
