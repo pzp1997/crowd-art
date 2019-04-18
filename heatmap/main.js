@@ -9,7 +9,7 @@ var img = new Image();
 img.addEventListener("load", function() {
   ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
 }, false);
-img.src = "../assets/paint-horse-running-in-field.jpg";
+img.src = "../assets/horse.jpg";
 
 function drawDot(x, y, color) {
   ctx.beginPath();
