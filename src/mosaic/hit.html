@@ -1,0 +1,267 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+
+  <crowd-instructions link-text="View instructions" link-type="button">
+    <short-summary>
+      <p>
+        This task requires you to draw on the screen. You will be given a
+        partial-image of a horse. Please draw an outline of the horse section
+        that you are given. The outline should “hug” the exterior of the horse.
+      </p>
+    </short-summary>
+
+    <!-- <detailed-instructions>
+      <p></p>
+    </detailed-instructions> -->
+
+    <!-- <positive-example>
+      <p>Provide an example of a good answer here</p>
+      <p>Explain why it's a good answer</p>
+    </positive-example> -->
+
+    <!-- <negative-example>
+      <p>Provide an example of a bad answer here</p>
+      <p>Explain why it's a bad answer</p>
+    </negative-example> -->
+  </crowd-instructions>
+
+  <style>
+    /* Source: Bootstrap 4.2.1 */
+    /* BEGIN BOOTSTRAP */
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      text-align: left;
+      background-color: #fff;
+    }
+    .container {
+      /* width: 100%; */
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .btn {
+      display: inline-block;
+      font-weight: 400;
+      color: #212529;
+      text-align: center;
+      vertical-align: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      background-color: transparent;
+      border: 1px solid transparent;
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 0.25rem;
+      transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .btn-light {
+      color: #212529;
+      background-color: #f8f9fa;
+      border-color: #f8f9fa;
+    }
+
+    .btn-light:hover {
+      color: #212529;
+      background-color: #e2e6ea;
+      border-color: #dae0e5;
+    }
+
+    .btn-light:focus, .btn-light.focus {
+      box-shadow: 0 0 0 0.2rem rgba(216, 217, 219, 0.5);
+    }
+
+    .btn-light.disabled, .btn-light:disabled {
+      color: #212529;
+      background-color: #f8f9fa;
+      border-color: #f8f9fa;
+    }
+    button {
+      border-radius: 0;
+    }
+
+    button:focus {
+      outline: 1px dotted;
+      outline: 5px auto -webkit-focus-ring-color;
+    }
+
+    input,
+    button,
+    select,
+    optgroup,
+    textarea {
+      margin: 0;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    button,
+    input {
+      overflow: visible;
+    }
+
+    button,
+    select {
+      text-transform: none;
+    }
+    .text-center {
+      text-align: center !important;
+    }
+    .float-left {
+      float: left !important;
+    }
+    .float-right {
+      float: right !important;
+    }
+    .clearfix::after {
+      display: block;
+      clear: both;
+      content: "";
+    }
+    .pt-3 {
+      padding-top: 1rem !important;
+    }
+
+    /* END BOOTSTRAP */
+
+    body {
+      background-color: #333;
+    }
+    #canvas {
+      border: 1px solid black;
+      margin-top: 20px;
+      background: url(../assets/horse_1_1.jpg);
+      background-size: cover;
+    }
+    .toolbar {
+      margin: 0 auto;
+      width: 600px;
+    }
+  </style>
+
+  <div class="container text-center">
+    <canvas id="canvas" width="600px" height="477px"></canvas>
+    <div class="toolbar">
+      <div class="float-right">
+        <button id="undo" class="btn btn-light" disabled>Undo</button>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+
+  <crowd-input id="response" name="response" type="hidden" style="display:hidden;"></crowd-input>
+  <crowd-button id="submitButton" form-action="submit" variant="primary" disabled>Submit</crowd-button>
+
+  <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function(event) {
+    /* STATE */
+    var strokes = [];
+    var stroke = [];
+    var isPenDown = false;
+
+    /* CANVAS SETUP */
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    function getMousePos(canvas, evt) {
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top,
+        timestamp: Date.now(),
+      };
+    }
+
+    /* DRAWING STROKES */
+    function redraw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < strokes.length; i++) {
+        if (strokes[i].undoTimestamp === null) {
+          var s = strokes[i].data;
+          for (var j = 1; j < s.length; j++) {
+            drawLine(s[j - 1], s[j]);
+          }
+        }
+      }
+    }
+
+    function drawLine(startPoint, endPoint) {
+      ctx.beginPath();
+      ctx.moveTo(startPoint.x, startPoint.y);
+      ctx.lineTo(endPoint.x, endPoint.y);
+      ctx.strokeStyle = "red";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    /* STORING STROKES */
+    canvas.addEventListener("mousedown", function(evt) {
+      isPenDown = true;
+      var mousePos = getMousePos(canvas, evt);
+      stroke = [mousePos];
+      strokes.push({
+        data: stroke,
+        undoTimestamp: null,
+      });
+      redraw();
+    });
+
+    canvas.addEventListener("mousemove", function(evt) {
+      if (isPenDown === true) {
+        var mousePos = getMousePos(canvas, evt);
+        stroke.push(mousePos);
+        redraw();
+      }
+    });
+
+    function endStroke(evt) {
+      if (stroke.length > 0) {
+        undoButton.removeAttribute("disabled");
+      }
+      isPenDown = false;
+      redraw();
+    }
+    canvas.addEventListener("mouseup", endStroke);
+    canvas.addEventListener("mouseleave", endStroke);
+
+    /* UNDO BUTTON */
+    var undoButton = document.getElementById("undo");
+    undoButton.addEventListener("click", function() {
+      var i = strokes.length - 1;
+      for (; i >= 0; i--) {
+        if (strokes[i].undoTimestamp === null) {
+          strokes[i].undoTimestamp = Date.now();
+          break;
+        }
+      }
+      if (i <= 0) {
+        undoButton.setAttribute("disabled", "");
+      }
+      redraw();
+    });
+
+    /* SUBMIT RESPONSE TO MTURK */
+    var submitButton = document.getElementById("submitButton");
+    var response = document.getElementById("response");
+    submitButton.addEventListener("click", function() {
+      response.value = JSON.stringify(strokes);
+    });
+  });
+  </script>
+</crowd-form>

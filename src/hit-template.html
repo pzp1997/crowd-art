@@ -1,0 +1,53 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+
+  <crowd-instructions link-text="View instructions" link-type="button">
+    <short-summary>
+      <p>
+        <!-- TODO description -->
+      </p>
+    </short-summary>
+
+    <!-- <detailed-instructions>
+      <p></p>
+    </detailed-instructions> -->
+
+    <!-- <positive-example>
+      <p>Provide an example of a good answer here</p>
+      <p>Explain why it's a good answer</p>
+    </positive-example> -->
+
+    <!-- <negative-example>
+      <p>Provide an example of a bad answer here</p>
+      <p>Explain why it's a bad answer</p>
+    </negative-example> -->
+  </crowd-instructions>
+
+  <style>
+  <!-- TODO css -->
+  </style>
+
+  <!-- TODO html -->
+
+  <crowd-input id="response" name="response" type="hidden" style="display:hidden;"></crowd-input>
+  <crowd-button id="submitButton" form-action="submit" variant="primary" disabled>Submit</crowd-button>
+
+  <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function(event) {
+    /* TODO javascript */
+
+    /* SUBMIT RESPONSE TO MTURK */
+    var submitButton = document.getElementById("submitButton");
+    var response = document.getElementById("response");
+    submitButton.addEventListener("click", function() {
+      response.value = JSON.stringify(/* TODO data to submit */);
+    });
+  });
+  </script>
+</crowd-form>
