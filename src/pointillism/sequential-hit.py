@@ -1,3 +1,19 @@
+import boto3
+import datetime
+
+# Use the Amazon Mechanical Turk Sandbox to publish test Human Intelligence Tasks (HITs) without paying any money.
+# Use this endpoint_url instead to use production
+# endpoint_url = 'https://mturk-requester.us-east-1.amazonaws.com'
+endpoint_url = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
+
+client = boto3.client(
+    'mturk',
+    endpoint_url=endpoint_url,
+)
+
+question_template = (
+"""<HTMLQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
+  <HTMLContent><![CDATA[
 <!-- You must include this JavaScript file -->
 <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
 
@@ -354,8 +370,50 @@
     var submitButton = document.getElementById("submitButton");
     var response = document.getElementById("response");
     submitButton.addEventListener("click", function() {
-      response.value = JSON.stringify(dots);
+      response.value = JSON.stringify(existingDots.concat(dots));
     });
   });
   </script>
 </crowd-form>
+
+]]>
+  </HTMLContent>
+</HTMLQuestion>
+""")
+
+# Create the HIT
+response = client.create_hit(
+    MaxAssignments = 1000,
+    LifetimeInSeconds = int(datetime.timedelta(days=7).total_seconds()),
+    AssignmentDurationInSeconds = int(datetime.timedelta(hours=1).total_seconds()),
+    Reward ='0.05',
+    Title = 'Add 20 colored dots to a canvas to recreate image of a horse',
+    Keywords = 'click,dots,color,horse',
+    Description = 'We are trying to recreate an image of a horse using colored dots. Use the color picker to choose a color and click on the canvas to add dots. You must add exactly 20 dots to submit the HIT. Bonus will be paid to best picture!',
+    Question = question_template,
+    HITLayoutParameters = [{'Name': 'data', 'Value': '[]'}],
+)
+
+# The response included the HITTypeId, which we'll use to configure your Notifications
+hit_type_id = response['HIT']['HITTypeId']
+print(hit_type_id)
+
+# Your SNS Topic - create or get it at https://console.aws.amazon.com/sns/v2/home?region=us-east-1#/topics
+# Example: 'arn:aws:sns:us-east-1:123456789012:MTurk-SNS'
+sns_topic = 'arn:aws:sns:us-east-1:277402979440:mturk-sns-test'
+
+# Configure the Notification structure using the SNS Topic ARN
+# to which you'd like MTurk to publish Notifications
+notification = {
+    'Destination': sns_topic,
+    'Transport': 'SNS',
+    'Version': '2014-08-15',
+    'EventTypes': ['AssignmentSubmitted']
+}
+
+# Configure Notification settings using the HITTypeId for which
+# you'd like to receive Notifications
+client.update_notification_settings(
+    HITTypeId = hit_type_id,
+    Notification = notification,
+)

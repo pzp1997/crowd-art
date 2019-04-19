@@ -1,3 +1,5 @@
+<HTMLQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd">
+  <HTMLContent><![CDATA[
 <!-- You must include this JavaScript file -->
 <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
 
@@ -354,8 +356,12 @@
     var submitButton = document.getElementById("submitButton");
     var response = document.getElementById("response");
     submitButton.addEventListener("click", function() {
-      response.value = JSON.stringify(dots);
+      response.value = JSON.stringify(existingDots.concat(dots));
     });
   });
   </script>
 </crowd-form>
+
+]]>
+  </HTMLContent>
+</HTMLQuestion>
