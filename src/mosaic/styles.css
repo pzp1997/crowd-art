@@ -102,6 +102,7 @@ select {
 .pt-3 {
   padding-top: 1rem !important;
 }
+
 /* END BOOTSTRAP */
 
 body {
@@ -110,19 +111,10 @@ body {
 #canvas {
   border: 1px solid black;
   margin-top: 20px;
+  background: url(../assets/horse_1_1.jpg);
+  background-size: cover;
 }
 .toolbar {
   margin: 0 auto;
-}
-.dot {
-  display: inline-block;
-  height: 31px;
-  width: 31px;
-  border-radius: 50%;
-  margin: 0 3px;
-}
-.color-option-selected {
-  height: 25px;
-  width: 25px;
-  border: 3px solid white;
+  width: 600px;
 }

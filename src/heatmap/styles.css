@@ -4,6 +4,8 @@ body {
 #canvas {
   border: 1px solid black;
   margin-top: 20px;
+  background: url(../assets/horse.jpg);
+  background-size: cover;
 }
 .text-center {
   text-align: center !important;

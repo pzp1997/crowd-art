@@ -3,12 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Heatmap</title>
+  <title>Mosaic</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="text-center">
+  <div class="container text-center">
     <canvas id="canvas" width="600px" height="477px"></canvas>
+    <div class="toolbar">
+      <div class="float-right">
+        <button id="undo" class="btn btn-light" disabled>Undo</button>
+      </div>
+      <div class="clearfix"></div>
+    </div>
   </div>
 
   <script type="text/javascript" src="main.js"></script>
