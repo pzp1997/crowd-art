@@ -13,7 +13,7 @@
         In the bottom-right corner is an image of a horse. We are trying to
         recreate this image using colored dots. Use the color picker (below the
         canvas on the left) to choose a color and click on the canvas to add
-        dots. You must add exactly 20 dots to submit the HIT.
+        dots. You must add exactly 10 dots to submit the HIT.
       </p>
     </short-summary>
 
@@ -198,12 +198,13 @@
     var pictureWidth = 60;
     var pictureHeight = 40;
     var dotDiameter = 10;
-    var dotsPerHit = 20;
+    var dotsPerHit = 10;
     var colors = ["red", "blue", "yellow", "orange", "green", "purple", "brown", "black", "white"];
 
     /* STATE */
     var selectedColor = colors[0];
-    var existingDots = JSON.parse(${data});
+    var existingDots = ${data};
+    console.log(existingDots);
     var dots = [];
     var countNewDots = 0;
 
@@ -236,9 +237,12 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.globalAlpha = 0.75;
+      for (var i = 0; i < existingDots.length; i++) {
+        var dot = existingDots[i];
+        drawDot(dot.c * dotDiameter, dot.r * dotDiameter, dot.color);
+      }
       for (var i = 0; i < dots.length; i++) {
         var dot = dots[i];
-
         drawDot(dot.c * dotDiameter, dot.r * dotDiameter, dot.color);
       }
 
@@ -354,7 +358,14 @@
     var submitButton = document.getElementById("submitButton");
     var response = document.getElementById("response");
     submitButton.addEventListener("click", function() {
-      response.value = JSON.stringify(dots);
+      var allDots = [];
+      for (var i = 0; i < existingDots.length; i++) {
+        allDots.push(existingDots[i]);
+      }
+      for (var i = 0; i < dots.length; i++) {
+        allDots.push(dots[i]);
+      }
+      response.value = JSON.stringify(allDots);
     });
   });
   </script>
