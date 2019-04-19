@@ -38,4 +38,4 @@ After accepting the HIT, you will be presented with a fragment of an image of a
 horse. Your task is to draw an outline around the part of the image that you
 think is the horse. Simply hold down your mouse and move it to draw! You have
 an option to “undo” an erroneous drawing. Just click the “submit” button when
-you are done!  
+you are done!
