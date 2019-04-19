@@ -138,14 +138,10 @@
     }
 
     /* END BOOTSTRAP */
-
-    body {
-      background-color: #333;
-    }
     #canvas {
       border: 1px solid black;
       margin-top: 20px;
-      background: url(../assets/horse_1_1.jpg);
+      background: url(http://palmerpaul.com/crowd-art/src/assets/${image});
       background-size: cover;
     }
     .toolbar {
@@ -165,7 +161,7 @@
   </div>
 
   <crowd-input id="response" name="response" type="hidden" style="display:hidden;"></crowd-input>
-  <crowd-button id="submitButton" form-action="submit" variant="primary" disabled>Submit</crowd-button>
+  <crowd-button id="submitButton" form-action="submit" variant="primary">Submit</crowd-button>
 
   <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function(event) {
