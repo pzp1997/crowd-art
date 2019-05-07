@@ -49,7 +49,8 @@ def frames_from_points(points, width, height):
 
 
 def main():
-    segments = points_from_batch('mosaic_peers.csv')
+    segments = points_from_batch('mosaic_workers.csv')
+    # segments = points_from_batch('mosaic_peers.csv')
 
     for segment, responses in segments.items():
         if any(x in segment for x in ['0_2', '0_3', '2_0']):
