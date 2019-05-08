@@ -53,11 +53,11 @@ def main():
     # segments = points_from_batch('mosaic_peers.csv')
 
     for segment, responses in segments.items():
-        if any(x in segment for x in ['0_2', '0_3', '2_0']):
-            points = []
-        else:
-            points = [point for response in responses for point in response]
-            points.sort(key=lambda x: x[2])
+        # if any(x in segment for x in ['0_2', '0_3', '2_0']):
+        #     points = []
+        # else:
+        points = [point for response in responses for point in response]
+        points.sort(key=lambda x: x[2])
 
         frame = frames_from_points(
             points,
@@ -68,6 +68,7 @@ def main():
         imageio.imwrite(os.path.join('mosaic_segments', segment), frame)
 
     print('successfully wrote images to file')
+
 
 if __name__ == '__main__':
     main()

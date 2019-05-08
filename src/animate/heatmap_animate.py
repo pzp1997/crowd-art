@@ -35,7 +35,7 @@ def frames_from_points(points, width, height, points_per_frame):
 
 def main():
     # points = points_from_batch('heatmap_workers.csv')
-    points = points_from_batch('heatmap_peers.csv')
+    points = points_from_batch('heatmap_peers2.csv')
     frames = frames_from_points(
         points, width=600, height=477, points_per_frame=20)
 
